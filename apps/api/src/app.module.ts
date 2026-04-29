@@ -28,6 +28,14 @@ import { RateLimitGuard } from './common/guards/rate-limit.guard';
 
 // Interceptors
 import { AuditInterceptor } from './audit/audit.interceptor';
+import { CategoriesModule } from './categories/categories.module';
+import { ProductsModule } from './products/products.module';
+import { WarehousesModule } from './warehouses/warehouses.module';
+import { InventoryModule } from './inventory/inventory.module';
+import { CustomersModule } from './customers/customers.module';
+import { SalesModule } from './sales/sales.module';
+import { InvoicesModule } from './invoices/invoices.module';
+import { ReportsModule } from './reports/reports.module';
 
 /**
  * AppModule — módulo raíz de Nexos ERP API
@@ -62,6 +70,14 @@ import { AuditInterceptor } from './audit/audit.interceptor';
     PermissionsModule,
     AuditModule,
     AdminModule,
+    CategoriesModule,
+    ProductsModule,
+    WarehousesModule,
+    InventoryModule,
+    CustomersModule,
+    SalesModule,
+    InvoicesModule,
+    ReportsModule,
   ],
   providers: [
     // Global guards — order matters!
