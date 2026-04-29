@@ -1,0 +1,68 @@
+name: nexos-staging
+
+# docker-compose.staging.yml
+# Uso: docker compose -f docker-compose.yml -f docker-compose.staging.yml up -d
+#
+# Este override aplica configuración específica de staging:
+# - Sin modo watch ni hot-reload
+# - Mailhog habilitado (para testear emails)
+# - Recursos limitados para staging compartido
+# - Política de restart siempre
+
+services:
+  postgres:
+    restart: always
+    environment:
+      POSTGRES_USER: ${STAGING_DB_USER:-nexos_staging}
+      POSTGRES_PASSWORD: ${STAGING_DB_PASSWORD:?STAGING_DB_PASSWORD requerida}
+      POSTGRES_DB: nexos_staging
+    volumes:
+      - postgres_staging_data:/var/lib/postgresql/data
+
+  redis:
+    restart: always
+    volumes:
+      - redis_staging_data:/data
+
+  minio:
+    restart: always
+    environment:
+      MINIO_ROOT_USER: ${STAGING_MINIO_USER:-nexos_staging}
+      MINIO_ROOT_PASSWORD: ${STAGING_MINIO_PASSWORD:?STAGING_MINIO_PASSWORD requerida}
+    volumes:
+      - minio_staging_data:/data
+
+  mailhog:
+    restart: always
+
+  api:
+    restart: always
+    environment:
+      NODE_ENV: staging
+      LOG_LEVEL: warn
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+
+  web:
+    restart: always
+    environment:
+      NODE_ENV: staging
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+
+  caddy:
+    restart: always
+
+volumes:
+  postgres_staging_data:
+    name: nexos_postgres_staging
+  redis_staging_data:
+    name: nexos_redis_staging
+  minio_staging_data:
+    name: nexos_minio_staging
