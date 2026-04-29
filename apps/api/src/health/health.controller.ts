@@ -1,6 +1,12 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import type { HealthResponse } from '@nexos/types';
+
+interface HealthResponse {
+  status: 'ok' | 'error';
+  timestamp: string;
+  uptime: number;
+  version: string;
+}
 
 /**
  * HealthController

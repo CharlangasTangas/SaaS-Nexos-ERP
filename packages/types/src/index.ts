@@ -47,6 +47,7 @@ export interface JwtPayload {
   tenantSlug: string;
   roles: UserRole[];
   permissions: string[];
+  isSuperadmin: boolean;
   iat: number;
   exp: number;
 }
@@ -54,6 +55,80 @@ export interface JwtPayload {
 export interface AuthTokens {
   accessToken: string;
   expiresIn: number;
+}
+
+export interface SignupRequest {
+  slug: string;
+  companyName: string;
+  businessType: BusinessType;
+  email: string;
+  password: string;
+  fullName: string;
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  accessToken: string;
+  expiresIn: number;
+}
+
+// ─── Roles & Permissions ──────────────────────────────────────────────────────
+
+export interface RoleResponse {
+  id: string;
+  name: string;
+  description: string | null;
+  isSystem: boolean;
+  permissions: PermissionResponse[];
+}
+
+export interface PermissionResponse {
+  id: string;
+  code: string;
+  description: string | null;
+}
+
+// ─── User Management ─────────────────────────────────────────────────────────
+
+export interface UserInviteRequest {
+  email: string;
+  fullName: string;
+  roleId: string;
+}
+
+export interface UserListItem {
+  id: string;
+  email: string;
+  fullName: string;
+  isActive: boolean;
+  lastLoginAt: string | null;
+  createdAt: string;
+  role: { id: string; name: string };
+}
+
+// ─── Admin ────────────────────────────────────────────────────────────────────
+
+export interface AdminTenantResponse extends Tenant {
+  userCount?: number;
+}
+
+// ─── Audit ────────────────────────────────────────────────────────────────────
+
+export interface AuditLogEntry {
+  id: string;
+  tenantId: string;
+  userId: string | null;
+  action: string;
+  entity: string;
+  entityId: string | null;
+  diff: Record<string, unknown>;
+  ip: string | null;
+  userAgent: string | null;
+  createdAt: string;
 }
 
 // ─── Storage ──────────────────────────────────────────────────────────────────
