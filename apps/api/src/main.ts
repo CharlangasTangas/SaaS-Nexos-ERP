@@ -5,7 +5,9 @@ import {
   FastifyAdapter
 } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import fastifyCookie from '@fastify/cookie';
 import { AppModule } from './app.module';
+import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 
 const PORT = process.env.PORT ?? 4000;
 const NODE_ENV = process.env.NODE_ENV ?? 'development';
@@ -15,6 +17,14 @@ async function bootstrap(): Promise<void> {
     AppModule,
     new FastifyAdapter({ logger: NODE_ENV === 'development' }),
   );
+
+  // ─── Cookie support (for httpOnly refresh tokens) ────────────────────────
+  await app.register(fastifyCookie as any, {
+    secret: process.env.JWT_REFRESH_SECRET ?? 'cookie-secret-dev',
+  });
+
+  // ─── Global exception filter ─────────────────────────────────────────────
+  app.useGlobalFilters(new AllExceptionsFilter());
 
   // ─── CORS ───────────────────────────────────────────────────────────────
   app.enableCors({
@@ -43,7 +53,14 @@ async function bootstrap(): Promise<void> {
     const config = new DocumentBuilder()
       .setTitle('Nexos ERP API')
       .setDescription(
-        'API del ERP multi-tenant. Usar header X-Tenant-Slug para identificar el tenant.',
+        'API del ERP multi-tenant. Usar header X-Tenant-Slug para identificar el tenant.\n\n' +
+        '## Authentication\n' +
+        '- Use `POST /auth/signup` to register a new tenant\n' +
+        '- Use `POST /auth/login` with `X-Tenant-Slug` header to get a JWT\n' +
+        '- Pass the JWT in `Authorization: Bearer <token>` header\n\n' +
+        '## Multi-tenancy\n' +
+        '- All endpoints (except /health, /auth/signup) require `X-Tenant-Slug` header\n' +
+        '- Row-Level Security ensures complete data isolation between tenants',
       )
       .setVersion('1.0.0')
       .addBearerAuth()
