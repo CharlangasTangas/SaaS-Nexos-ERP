@@ -1,0 +1,40 @@
+# CODEOWNERS — Nexos ERP
+# Define los revisores automáticos por área del código.
+# Convención: cada área tiene al menos 1 owner obligatorio.
+# Referencia: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# ─── Default: cualquier cambio requiere review del equipo ────────────────────
+* @CharlangasTangas/nexos-team
+
+# ─── Infraestructura (P1 — DevOps) ──────────────────────────────────────────
+/.github/              @CharlangasTangas/nexos-devops
+/docker-compose*.yml   @CharlangasTangas/nexos-devops
+/Caddyfile             @CharlangasTangas/nexos-devops
+/Dockerfile*           @CharlangasTangas/nexos-devops
+/apps/*/Dockerfile     @CharlangasTangas/nexos-devops
+/infra/                @CharlangasTangas/nexos-devops
+/scripts/              @CharlangasTangas/nexos-devops
+/Makefile              @CharlangasTangas/nexos-devops
+/docs/                 @CharlangasTangas/nexos-devops
+
+# ─── Schema y RLS (P2 — Backend Core) ───────────────────────────────────────
+# Requiere 2 revisores por impacto de seguridad en multi-tenancy
+/apps/api/prisma/      @CharlangasTangas/nexos-backend-core @CharlangasTangas/nexos-devops
+/apps/api/src/auth/    @CharlangasTangas/nexos-backend-core @CharlangasTangas/nexos-devops
+
+# ─── Backend Core (P2) ───────────────────────────────────────────────────────
+/apps/api/src/         @CharlangasTangas/nexos-backend-core
+
+# ─── Módulos de negocio (P3) ─────────────────────────────────────────────────
+/apps/api/src/products/    @CharlangasTangas/nexos-backend-biz
+/apps/api/src/inventory/   @CharlangasTangas/nexos-backend-biz
+/apps/api/src/sales/       @CharlangasTangas/nexos-backend-biz
+/apps/api/src/customers/   @CharlangasTangas/nexos-backend-biz
+
+# ─── Frontend (P4) ───────────────────────────────────────────────────────────
+/apps/web/             @CharlangasTangas/nexos-frontend
+
+# ─── Shared packages ─────────────────────────────────────────────────────────
+/packages/types/       @CharlangasTangas/nexos-backend-core @CharlangasTangas/nexos-frontend
+/packages/ui/          @CharlangasTangas/nexos-frontend
+/packages/config/      @CharlangasTangas/nexos-devops

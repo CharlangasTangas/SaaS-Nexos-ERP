@@ -1,0 +1,15 @@
+{
+  "name": "@nexos/config",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./typescript": "./tsconfig/base.json",
+    "./eslint": "./eslint/index.js",
+    "./prettier": "./prettier/index.js"
+  },
+  "files": [
+    "tsconfig",
+    "eslint",
+    "prettier"
+  ]
+}

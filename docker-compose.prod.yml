@@ -1,0 +1,93 @@
+name: nexos-prod
+
+# docker-compose.prod.yml
+# Uso: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#
+# Este override aplica configuración de producción local:
+# - Sin Mailhog (producción envía emails reales)
+# - Sin consola MinIO expuesta públicamente
+# - Recursos adecuados para producción
+# - Logs estructurados
+# - Restart siempre
+
+services:
+  postgres:
+    restart: always
+    environment:
+      POSTGRES_USER: ${PROD_DB_USER:?PROD_DB_USER requerida}
+      POSTGRES_PASSWORD: ${PROD_DB_PASSWORD:?PROD_DB_PASSWORD requerida}
+      POSTGRES_DB: nexos_prod
+    ports:
+      # En producción, no exponer Postgres al host
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres_prod_data:/var/lib/postgresql/data
+
+  redis:
+    restart: always
+    command: >
+      redis-server
+      --appendonly yes
+      --requirepass ${REDIS_PASSWORD:?REDIS_PASSWORD requerida}
+      --maxmemory 512mb
+      --maxmemory-policy allkeys-lru
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redis_prod_data:/data
+
+  minio:
+    restart: always
+    environment:
+      MINIO_ROOT_USER: ${PROD_MINIO_USER:?PROD_MINIO_USER requerida}
+      MINIO_ROOT_PASSWORD: ${PROD_MINIO_PASSWORD:?PROD_MINIO_PASSWORD requerida}
+    ports:
+      - "127.0.0.1:9000:9000"
+      # Consola solo en localhost en producción
+      - "127.0.0.1:9001:9001"
+    volumes:
+      - minio_prod_data:/data
+
+  # En producción NO se usa Mailhog
+  mailhog:
+    deploy:
+      replicas: 0
+    profiles:
+      - never
+
+  api:
+    restart: always
+    environment:
+      NODE_ENV: production
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 1G
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  web:
+    restart: always
+    environment:
+      NODE_ENV: production
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+
+  caddy:
+    restart: always
+
+volumes:
+  postgres_prod_data:
+    name: nexos_postgres_prod
+  redis_prod_data:
+    name: nexos_redis_prod
+  minio_prod_data:
+    name: nexos_minio_prod
