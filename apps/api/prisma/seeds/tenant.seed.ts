@@ -13,27 +13,27 @@ const SYSTEM_ROLES = ['OWNER', 'ADMIN', 'MANAGER', 'OPERATOR', 'VIEWER'];
 const ROLE_PERMISSIONS_MAP: Record<string, string[]> = {
   OWNER: [
     'products:read', 'products:write', 'inventory:read', 'inventory:adjust',
-    'sales:read', 'sales:create', 'customers:read', 'customers:write',
-    'reports:view', 'reports:export', 'users:manage', 'roles:manage',
+    'sales:read', 'sales:write', 'customers:read', 'customers:write',
+    'reports:read', 'reports:export', 'users:manage', 'roles:manage',
     'tenants:manage',
   ],
   ADMIN: [
     'products:read', 'products:write', 'inventory:read', 'inventory:adjust',
-    'sales:read', 'sales:create', 'customers:read', 'customers:write',
-    'reports:view', 'reports:export', 'users:manage', 'roles:manage',
+    'sales:read', 'sales:write', 'customers:read', 'customers:write',
+    'reports:read', 'reports:export', 'users:manage', 'roles:manage',
   ],
   MANAGER: [
     'products:read', 'products:write', 'inventory:read', 'inventory:adjust',
-    'sales:read', 'sales:create', 'customers:read', 'customers:write',
-    'reports:view', 'reports:export',
+    'sales:read', 'sales:write', 'customers:read', 'customers:write',
+    'reports:read', 'reports:export',
   ],
   OPERATOR: [
-    'products:read', 'inventory:read', 'sales:read', 'sales:create',
+    'products:read', 'inventory:read', 'sales:read', 'sales:write',
     'customers:read',
   ],
   VIEWER: [
     'products:read', 'inventory:read', 'sales:read', 'customers:read',
-    'reports:view',
+    'reports:read',
   ],
 };
 
@@ -48,7 +48,7 @@ async function seedTenant(slug: string) {
 
   // Get all permissions
   const allPerms = await prisma.permission.findMany();
-  const permCodeToId = Object.fromEntries(allPerms.map((p) => [p.code, p.id]));
+  const permCodeToId = Object.fromEntries(allPerms.map((p: any) => [p.code, p.id]));
 
   for (const roleName of SYSTEM_ROLES) {
     // Upsert role

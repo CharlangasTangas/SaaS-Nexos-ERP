@@ -61,3 +61,84 @@ CREATE POLICY tenant_isolation_audit_logs ON audit_logs
 -- SELECT tablename, rowsecurity
 -- FROM pg_tables
 -- WHERE schemaname = 'public' AND tablename IN ('users', 'roles', 'role_permissions', 'audit_logs');
+
+-- ─── categories ──────────────────────────────────────────────────────────────
+ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
+ALTER TABLE categories FORCE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS tenant_isolation_categories ON categories;
+CREATE POLICY tenant_isolation_categories ON categories
+  USING (tenant_id = current_setting('app.tenant_id', true)::uuid)
+  WITH CHECK (tenant_id = current_setting('app.tenant_id', true)::uuid);
+
+-- ─── products ────────────────────────────────────────────────────────────────
+ALTER TABLE products ENABLE ROW LEVEL SECURITY;
+ALTER TABLE products FORCE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS tenant_isolation_products ON products;
+CREATE POLICY tenant_isolation_products ON products
+  USING (tenant_id = current_setting('app.tenant_id', true)::uuid)
+  WITH CHECK (tenant_id = current_setting('app.tenant_id', true)::uuid);
+
+-- ─── warehouses ──────────────────────────────────────────────────────────────
+ALTER TABLE warehouses ENABLE ROW LEVEL SECURITY;
+ALTER TABLE warehouses FORCE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS tenant_isolation_warehouses ON warehouses;
+CREATE POLICY tenant_isolation_warehouses ON warehouses
+  USING (tenant_id = current_setting('app.tenant_id', true)::uuid)
+  WITH CHECK (tenant_id = current_setting('app.tenant_id', true)::uuid);
+
+-- ─── inventory ───────────────────────────────────────────────────────────────
+ALTER TABLE inventory ENABLE ROW LEVEL SECURITY;
+ALTER TABLE inventory FORCE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS tenant_isolation_inventory ON inventory;
+CREATE POLICY tenant_isolation_inventory ON inventory
+  USING (tenant_id = current_setting('app.tenant_id', true)::uuid)
+  WITH CHECK (tenant_id = current_setting('app.tenant_id', true)::uuid);
+
+-- ─── stock_movements ─────────────────────────────────────────────────────────
+ALTER TABLE stock_movements ENABLE ROW LEVEL SECURITY;
+ALTER TABLE stock_movements FORCE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS tenant_isolation_stock_movements ON stock_movements;
+CREATE POLICY tenant_isolation_stock_movements ON stock_movements
+  USING (tenant_id = current_setting('app.tenant_id', true)::uuid)
+  WITH CHECK (tenant_id = current_setting('app.tenant_id', true)::uuid);
+
+-- ─── customers ───────────────────────────────────────────────────────────────
+ALTER TABLE customers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE customers FORCE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS tenant_isolation_customers ON customers;
+CREATE POLICY tenant_isolation_customers ON customers
+  USING (tenant_id = current_setting('app.tenant_id', true)::uuid)
+  WITH CHECK (tenant_id = current_setting('app.tenant_id', true)::uuid);
+
+-- ─── sales ───────────────────────────────────────────────────────────────────
+ALTER TABLE sales ENABLE ROW LEVEL SECURITY;
+ALTER TABLE sales FORCE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS tenant_isolation_sales ON sales;
+CREATE POLICY tenant_isolation_sales ON sales
+  USING (tenant_id = current_setting('app.tenant_id', true)::uuid)
+  WITH CHECK (tenant_id = current_setting('app.tenant_id', true)::uuid);
+
+-- ─── sale_items ──────────────────────────────────────────────────────────────
+ALTER TABLE sale_items ENABLE ROW LEVEL SECURITY;
+ALTER TABLE sale_items FORCE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS tenant_isolation_sale_items ON sale_items;
+CREATE POLICY tenant_isolation_sale_items ON sale_items
+  USING (tenant_id = current_setting('app.tenant_id', true)::uuid)
+  WITH CHECK (tenant_id = current_setting('app.tenant_id', true)::uuid);
+
+-- ─── invoices ────────────────────────────────────────────────────────────────
+ALTER TABLE invoices ENABLE ROW LEVEL SECURITY;
+ALTER TABLE invoices FORCE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS tenant_isolation_invoices ON invoices;
+CREATE POLICY tenant_isolation_invoices ON invoices
+  USING (tenant_id = current_setting('app.tenant_id', true)::uuid)
+  WITH CHECK (tenant_id = current_setting('app.tenant_id', true)::uuid);
